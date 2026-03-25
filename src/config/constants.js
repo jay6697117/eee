@@ -28,6 +28,11 @@ export const COMBAT = {
   COMBO_TIMEOUT: 30,          // 连击超时（帧）
   INPUT_BUFFER_FRAMES: 6,     // 输入缓冲（帧）
   SIMULTANEOUS_TOLERANCE: 3,  // 同时按键容差（帧）
+  EX_RAGE_COST: 50,           // EX 技能怒气消耗
+  AWAKEN_RAGE_COST: 100,      // 觉醒爆发怒气消耗
+  AWAKEN_DURATION: 600,       // 觉醒持续帧数（10秒）
+  AWAKEN_ATK_MULT: 1.3,       // 觉醒攻击力倍率
+  AWAKEN_DEF_MULT: 0.8,       // 觉醒减伤倍率
 };
 
 // 连招递减表
@@ -71,15 +76,19 @@ export const STATES = {
   AIR_ATTACK: 'AIR_ATTACK',
   SPECIAL1: 'SPECIAL1',
   SPECIAL2: 'SPECIAL2',
+  EX_SPECIAL1: 'EX_SPECIAL1',
+  EX_SPECIAL2: 'EX_SPECIAL2',
   SUPER: 'SUPER',
   BLOCK: 'BLOCK',
   BLOCK_STUN: 'BLOCK_STUN',
   HIT: 'HIT',
   LAUNCH: 'LAUNCH',
+  JUGGLE: 'JUGGLE',
   KNOCKDOWN: 'KNOCKDOWN',
   GETUP: 'GETUP',
   KO: 'KO',
   WIN: 'WIN',
+  AWAKENING: 'AWAKENING',
 };
 
 // 按键映射

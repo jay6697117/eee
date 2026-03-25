@@ -571,28 +571,36 @@ export default class BattleScene extends Phaser.Scene {
       attacker.addRage(8);
 
       // 打击感效果
-      const isSpecial = attacker.state === STATES.SPECIAL1 || attacker.state === STATES.SPECIAL2;
+      const isEX = attacker.state === STATES.EX_SPECIAL1 || attacker.state === STATES.EX_SPECIAL2;
+      const isSpecial = isEX || attacker.state === STATES.SPECIAL1 || attacker.state === STATES.SPECIAL2;
       const isHeavy = attacker.state === STATES.ATTACK_HEAVY;
 
-      // Hit Stop
-      const stopFrames = isSpecial ? JUICE.HITSTOP_SPECIAL : isHeavy ? JUICE.HITSTOP_HEAVY : JUICE.HITSTOP_LIGHT;
+      // Hit Stop（EX 版更长）
+      const stopFrames = isEX ? JUICE.HITSTOP_SUPER : isSpecial ? JUICE.HITSTOP_SPECIAL : isHeavy ? JUICE.HITSTOP_HEAVY : JUICE.HITSTOP_LIGHT;
       attacker.hitStopFrames = stopFrames;
       defender.hitStopFrames = stopFrames;
 
-      // 屏幕震动
-      const shakeAmount = isSpecial ? JUICE.SHAKE_SPECIAL : isHeavy ? JUICE.SHAKE_HEAVY : JUICE.SHAKE_LIGHT;
+      // 屏幕震动（EX 版更强）
+      const shakeAmount = isEX ? JUICE.SHAKE_SUPER * 0.6 : isSpecial ? JUICE.SHAKE_SPECIAL : isHeavy ? JUICE.SHAKE_HEAVY : JUICE.SHAKE_LIGHT;
       this.shakeIntensity = shakeAmount;
 
-      // 命中特效 — 闪光 + 粒子
-      const hitLevel = isSpecial ? 'special' : isHeavy ? 'heavy' : 'light';
+      // 命中特效 — 闪光 + 粒子（EX 用超级特效）
+      const hitLevel = isEX ? 'special' : isSpecial ? 'special' : isHeavy ? 'heavy' : 'light';
       this.createHitEffect(defender.x, defender.y - 40, attacker.data.color, hitLevel);
 
+      // EX 命中时额外全屏闪白
+      if (isEX) {
+        const flash = this.add.rectangle(640, 360, 1280, 720, attacker.data.color, 0.3).setDepth(300);
+        this.tweens.add({ targets: flash, alpha: 0, duration: 300, onComplete: () => flash.destroy() });
+      }
+
       // 音效
-      if (isSpecial) this.sfx.hitSpecial();
+      if (isEX) this.sfx.hitSpecial();
+      else if (isSpecial) this.sfx.hitSpecial();
       else if (isHeavy) this.sfx.hitHeavy();
       else this.sfx.hitLight();
 
-      // 元素克制可视化（仅必杀技触发）
+      // 元素克制可视化（必杀技/EX技能触发）
       if (isSpecial && hitData.element) {
         this.showElementEffect(attacker, defender);
       }

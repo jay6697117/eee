@@ -117,6 +117,13 @@ export default class FighterBase {
     // 受击闪白处理
     if (this.flashTimer > 0) {
       this.sprite.setTintFill(0xffffff);
+    } else if (this.state === STATES.EX_SPECIAL1 || this.state === STATES.EX_SPECIAL2) {
+      // EX 技能：元素色调闪烁
+      const t = Date.now() % 200;
+      this.sprite.setTint(t < 100 ? (this.data.color || 0xffaa00) : 0xffffff);
+    } else if (this.isAwakened) {
+      // 觉醒状态：持续元素色调发光
+      this.sprite.setTint(this.data.color || 0xffaa00);
     } else {
       this.sprite.clearTint();
     }
@@ -125,7 +132,8 @@ export default class FighterBase {
   // 判断是否在攻击状态
   isAttacking() {
     return [STATES.ATTACK_LIGHT, STATES.ATTACK_HEAVY, STATES.CROUCH_ATTACK,
-            STATES.AIR_ATTACK, STATES.SPECIAL1, STATES.SPECIAL2, STATES.SUPER].includes(this.state);
+            STATES.AIR_ATTACK, STATES.SPECIAL1, STATES.SPECIAL2,
+            STATES.EX_SPECIAL1, STATES.EX_SPECIAL2, STATES.SUPER].includes(this.state);
   }
 
   // 判断是否可以行动
@@ -151,6 +159,14 @@ export default class FighterBase {
 
     // 状态计时
     this.stateTimer++;
+
+    // 觉醒状态计时
+    if (this.isAwakened) {
+      this.awakenTimer--;
+      if (this.awakenTimer <= 0) {
+        this.isAwakened = false;
+      }
+    }
 
     // 连击超时
     if (this.comboTimer > 0) {
@@ -216,6 +232,8 @@ export default class FighterBase {
       case STATES.AIR_ATTACK:
       case STATES.SPECIAL1:
       case STATES.SPECIAL2:
+      case STATES.EX_SPECIAL1:
+      case STATES.EX_SPECIAL2:
         this.updateAttack(state, input);
         break;
 
@@ -257,14 +275,28 @@ export default class FighterBase {
 
   // 处理移动输入
   handleMovement(state, input) {
+    // 觉醒爆发检测：light + heavy 同时按下且怒气满
+    if (state.light && state.heavy && this.rage >= COMBAT.AWAKEN_RAGE_COST && !this.isAwakened) {
+      this.activateAwakening();
+      return;
+    }
+
     // 先检测必杀技指令
     const specialInput = input.checkSpecialInput(this.facing);
     if (specialInput === 'special1') {
-      this.startAttack('special1', STATES.SPECIAL1);
+      if (this.rage >= COMBAT.EX_RAGE_COST) {
+        this.startAttack('exSpecial1', STATES.EX_SPECIAL1, true);
+      } else {
+        this.startAttack('special1', STATES.SPECIAL1);
+      }
       return;
     }
     if (specialInput === 'special2') {
-      this.startAttack('special2', STATES.SPECIAL2);
+      if (this.rage >= COMBAT.EX_RAGE_COST) {
+        this.startAttack('exSpecial2', STATES.EX_SPECIAL2, true);
+      } else {
+        this.startAttack('special2', STATES.SPECIAL2);
+      }
       return;
     }
 
@@ -277,8 +309,13 @@ export default class FighterBase {
       this.startAttack('heavy', STATES.ATTACK_HEAVY);
       return;
     }
+    // 必杀技（EX 版优先）
     if (state.special) {
-      this.startAttack('special1', STATES.SPECIAL1);
+      if (this.rage >= COMBAT.EX_RAGE_COST) {
+        this.startAttack('exSpecial1', STATES.EX_SPECIAL1, true);
+      } else {
+        this.startAttack('special1', STATES.SPECIAL1);
+      }
       return;
     }
 
@@ -315,8 +352,20 @@ export default class FighterBase {
     }
   }
 
+  // 觉醒爆发
+  activateAwakening() {
+    this.isAwakened = true;
+    this.awakenTimer = COMBAT.AWAKEN_DURATION;
+    this.rage = 0;
+    this.invincible = true;
+    // 30 帧无敌后取消
+    this.scene.time.delayedCall(500, () => {
+      if (this.state !== STATES.KO) this.invincible = false;
+    });
+  }
+
   // 开始攻击
-  startAttack(moveName, state) {
+  startAttack(moveName, state, isEX = false) {
     const move = this.data.moves[moveName];
     if (!move) return;
 
@@ -324,6 +373,11 @@ export default class FighterBase {
     this.changeState(state);
     this.attackFrame = 0;
     this.hitThisAttack = false;
+
+    // EX 技能扣除怒气
+    if (isEX) {
+      this.rage = Math.max(0, this.rage - COMBAT.EX_RAGE_COST);
+    }
 
     // 必杀技前进位移
     if (move.moveForward) {
@@ -372,18 +426,22 @@ export default class FighterBase {
     if (this.attackFrame < move.startup || this.attackFrame >= move.startup + move.active) return [];
     if (this.hitThisAttack) return []; // 已命中不重复判定
 
-    return (move.hitboxes || []).map(hb => ({
-      x: this.x + hb.x * this.facing,
-      y: this.y + hb.y,
-      w: hb.w,
-      h: hb.h,
-      damage: move.damage,
-      hitstun: move.hitstun,
-      blockstun: move.blockstun || 5,
-      knockback: move.knockback || 3,
-      isElement: move.element || false,
-      type: move.type || 'mid',
-    }));
+    return (move.hitboxes || []).map(hb => {
+      // 觉醒状态下攻击力增强
+      const awakenMult = this.isAwakened ? COMBAT.AWAKEN_ATK_MULT : 1;
+      return {
+        x: this.x + hb.x * this.facing,
+        y: this.y + hb.y,
+        w: hb.w,
+        h: hb.h,
+        damage: Math.floor(move.damage * awakenMult),
+        hitstun: move.hitstun,
+        blockstun: move.blockstun || 5,
+        knockback: move.knockback || 3,
+        isElement: move.element || false,
+        type: move.type || 'mid',
+      };
+    });
   }
 
   // 获取受击判定框
@@ -417,6 +475,11 @@ export default class FighterBase {
     // 计算伤害
     const scaling = COMBO_SCALING[Math.min(this.comboCount, COMBO_SCALING.length - 1)];
     let damage = Math.floor(hitData.damage * scaling);
+
+    // 觉醒状态下减伤
+    if (this.isAwakened) {
+      damage = Math.floor(damage * COMBAT.AWAKEN_DEF_MULT);
+    }
 
     // 元素克制
     if (hitData.isElement && attackerElement) {
