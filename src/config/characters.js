@@ -122,6 +122,66 @@ export const CHARACTERS = {
       },
     },
   },
+
+  neo: {
+    id: 'neo',
+    name: '奈欧',
+    nameEn: 'Neo',
+    title: '赛博忍者',
+    element: 'thunder',
+    color: 0xffee00,
+    accentColor: 0xffff88,
+    spriteScale: 1.2,
+
+    stats: {
+      hp: 880,
+      walkSpeed: 5.5,
+      jumpForce: -17,
+      weight: 0.7,
+    },
+
+    moves: {
+      light: {
+        damage: 25, startup: 2, active: 2, recovery: 3,
+        hitstun: 7, blockstun: 4, knockback: 2,
+        hitboxes: [{ x: 40, y: -40, w: 40, h: 25 }],
+      },
+      heavy: {
+        damage: 60, startup: 5, active: 3, recovery: 8,
+        hitstun: 12, blockstun: 6, knockback: 5,
+        hitboxes: [{ x: 35, y: -50, w: 55, h: 35 }],
+      },
+      crouchLight: {
+        damage: 20, startup: 2, active: 2, recovery: 3,
+        hitstun: 6, blockstun: 3, knockback: 1, type: 'low',
+        hitboxes: [{ x: 35, y: -8, w: 45, h: 16 }],
+      },
+      crouchHeavy: {
+        damage: 55, startup: 4, active: 3, recovery: 10,
+        hitstun: 14, blockstun: 8, knockback: 6, type: 'low',
+        hitboxes: [{ x: 25, y: -12, w: 60, h: 25 }],
+      },
+      airAttack: {
+        damage: 35, startup: 3, active: 3, recovery: 6,
+        hitstun: 9, blockstun: 5, knockback: 3,
+        hitboxes: [{ x: 30, y: 8, w: 45, h: 35 }],
+      },
+      special1: {
+        name: '雷光斩',
+        damage: 100, startup: 4, active: 5, recovery: 12,
+        hitstun: 18, blockstun: 10, knockback: 9, element: true,
+        hitboxes: [{ x: 20, y: -55, w: 90, h: 55 }],
+        moveForward: 160,
+      },
+      special2: {
+        name: '影分身突',
+        damage: 90, startup: 3, active: 6, recovery: 14,
+        hitstun: 16, blockstun: 8, knockback: 6, element: true,
+        hitboxes: [{ x: 0, y: -45, w: 110, h: 45 }],
+        moveForward: 250,
+      },
+    },
+  },
 };
 
 // 元素克制表

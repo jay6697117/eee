@@ -23,6 +23,7 @@ export default class BattleScene extends Phaser.Scene {
     // 预加载角色图集
     this.load.atlas('ignis', 'assets/sprites/ignis.png', 'assets/sprites/ignis.json');
     this.load.atlas('lingshuang', 'assets/sprites/lingshuang.png', 'assets/sprites/lingshuang.json');
+    this.load.atlas('neo', 'assets/sprites/neo.png', 'assets/sprites/neo.json');
   }
 
   create() {
@@ -48,9 +49,16 @@ export default class BattleScene extends Phaser.Scene {
 
     // 创建输入
     this.input1 = new InputManager(this, 0);
+    // 训练模式检测
+    this.isTraining = this.battleConfig.mode === 'training';
     // 根据模式配置决定 P2 是 AI 还是玩家
     this.useAI = this.battleConfig.useAI !== false;
-    this.input2 = this.useAI ? new AIController(this, 'normal') : new InputManager(this, 1);
+    if (this.isTraining) {
+      // 训练模式：AI 使用沙袋（dummy）难度
+      this.input2 = new AIController(this, 'dummy');
+    } else {
+      this.input2 = this.useAI ? new AIController(this, 'normal') : new InputManager(this, 1);
+    }
 
     // 创建 HUD
     this.hud = new BattleHUD(this);
@@ -87,10 +95,17 @@ export default class BattleScene extends Phaser.Scene {
     // 触屏控制（仅在触屏设备或 ?touch=1 时显示）
     this.touchControls = new TouchControls(this, this.input1);
 
+    // 训练模式 HUD
+    if (this.isTraining) {
+      this.createTrainingHUD();
+      this.debugGraphics = this.add.graphics().setDepth(150);
+    }
+
     // 开始新回合
     this.startRound();
 
     console.log('🥊 战斗场景已加载！');
+    if (this.isTraining) console.log('🏋️ 训练模式 — HP 自动回复 / 碰撞框可视 / 按 H 切换显示');
     console.log('🎮 P1 操作: WASD 移动 | J 轻攻 | K 重攻 | L 必杀 | U 防御');
     console.log('🎮 P2 操作: 方向键移动 | 小键盘1 轻攻 | 小键盘2 重攻 | 小键盘3 必杀 | 小键盘0 防御');
   }
@@ -134,6 +149,20 @@ export default class BattleScene extends Phaser.Scene {
       ['lingshuang_hit_3','lingshuang_hit_4','lingshuang_hit_5'], 8, false);
     createAnim('lingShuang_block', 'lingshuang',
       ['lingshuang_idle_0'], 10, false);
+
+    // === Neo (奈欧) 动画 — 4帧/行 ===
+    createAnim('neo_idle', 'neo',
+      ['neo_idle_0','neo_idle_1','neo_idle_2','neo_idle_3'], 8, true);
+    createAnim('neo_walk', 'neo',
+      ['neo_walk_0','neo_walk_1','neo_walk_2','neo_walk_3'], 10, true);
+    createAnim('neo_attack', 'neo',
+      ['neo_light_0','neo_light_1','neo_light_2','neo_light_3'], 14, false);
+    createAnim('neo_hit', 'neo',
+      ['neo_hitstun_0'], 10, false);
+    createAnim('neo_knockdown', 'neo',
+      ['neo_knockdown_0'], 8, false);
+    createAnim('neo_block', 'neo',
+      ['neo_block_0'], 10, false);
   }
 
   // 创建场景背景
@@ -204,6 +233,119 @@ export default class BattleScene extends Phaser.Scene {
 
     this.add.text(10, 650, 'P1: WASD移动 J轻攻 K重攻 L必杀 U防御', style).setDepth(110);
     this.add.text(1270, 650, 'P2: 方向键移动 小键盘1/2/3攻击 0防御', style).setOrigin(1, 0).setDepth(110);
+  }
+
+  // ==================== 训练模式 ====================
+
+  // 训练模式 HUD
+  createTrainingHUD() {
+    const panelStyle = { fontSize: '12px', fontFamily: 'monospace', color: '#88ff88', lineSpacing: 2 };
+
+    // 左上角标签
+    this.add.text(640, 670, '🏋️ 训练模式 | H:碰撞框 | R:重置位置', {
+      fontSize: '12px', fontFamily: 'Arial', color: '#ffcc44',
+    }).setOrigin(0.5).setDepth(130);
+
+    // P1 帧数据面板
+    this.trainingP1Info = this.add.text(10, 120, '', panelStyle).setDepth(130);
+    // P2 帧数据面板
+    this.trainingP2Info = this.add.text(1270, 120, '', panelStyle).setOrigin(1, 0).setDepth(130);
+
+    // 碰撞框显示开关
+    this.showHitboxes = true;
+
+    // 按键绑定
+    this.input.keyboard.on('keydown-H', () => {
+      this.showHitboxes = !this.showHitboxes;
+    });
+    this.input.keyboard.on('keydown-R', () => {
+      // 重置角色位置和 HP
+      this.p1.reset(STAGE.P1_START_X);
+      this.p2.reset(STAGE.P2_START_X);
+      this.hud.resetGhostHP();
+    });
+  }
+
+  // 训练模式每帧更新
+  updateTraining() {
+    if (!this.isTraining) return;
+
+    // HP 自动回复（被打后 2 秒开始回复）
+    const regenDelay = 120; // 2 秒 @60fps
+    if (this.p2.hitStunTimer <= 0) {
+      this.p2.regenCounter = (this.p2.regenCounter || 0) + 1;
+      if (this.p2.regenCounter > regenDelay) {
+        this.p2.hp = Math.min(this.p2.maxHp, this.p2.hp + 3);
+      }
+    } else {
+      this.p2.regenCounter = 0;
+    }
+    // P1 也自动回复
+    if (this.p1.hitStunTimer <= 0) {
+      this.p1.regenCounter = (this.p1.regenCounter || 0) + 1;
+      if (this.p1.regenCounter > regenDelay) {
+        this.p1.hp = Math.min(this.p1.maxHp, this.p1.hp + 3);
+      }
+    } else {
+      this.p1.regenCounter = 0;
+    }
+
+    // 训练模式不倒计时
+    this.roundTimer = BATTLE.ROUND_TIME;
+
+    // 更新帧数据显示
+    this.updateTrainingInfo(this.p1, this.trainingP1Info, 'P1');
+    this.updateTrainingInfo(this.p2, this.trainingP2Info, 'P2');
+
+    // 绘制碰撞框
+    if (this.showHitboxes && this.debugGraphics) {
+      this.debugGraphics.clear();
+      this.drawHitboxes(this.p1);
+      this.drawHitboxes(this.p2);
+    } else if (this.debugGraphics) {
+      this.debugGraphics.clear();
+    }
+  }
+
+  // 更新帧数据文字
+  updateTrainingInfo(fighter, textObj, label) {
+    if (!textObj) return;
+    const stateNames = {
+      idle: '待机', walking: '行走', jumping: '跳跃', crouching: '蹲下',
+      attackLight: '轻攻', attackHeavy: '重攻', special1: '必杀1', special2: '必杀2',
+      hitstun: '受击硬直', blockstun: '格挡硬直', knockdown: '倒地', win: '胜利',
+    };
+    const stateName = stateNames[fighter.state] || fighter.state;
+    const hp = Math.round(fighter.hp);
+    const rage = Math.round(fighter.rage);
+    const combo = fighter.comboCount;
+
+    textObj.setText(
+      `${label} [${stateName}]\n` +
+      `HP: ${hp}/${fighter.maxHp}\n` +
+      `怒气: ${rage}/${fighter.maxRage}\n` +
+      `连击: ${combo}`
+    );
+  }
+
+  // 绘制碰撞框
+  drawHitboxes(fighter) {
+    const gfx = this.debugGraphics;
+
+    // 受击框（绿色）
+    const hurtbox = fighter.getHurtbox();
+    gfx.lineStyle(1, 0x00ff00, 0.6);
+    gfx.strokeRect(hurtbox.x, hurtbox.y, hurtbox.w, hurtbox.h);
+
+    // 攻击框（红色）
+    const hitboxes = fighter.getActiveHitboxes();
+    gfx.lineStyle(2, 0xff0000, 0.8);
+    for (const hb of hitboxes) {
+      gfx.strokeRect(hb.x, hb.y, hb.w, hb.h);
+      // 填充半透明红色
+      gfx.fillStyle(0xff0000, 0.15);
+      gfx.fillRect(hb.x, hb.y, hb.w, hb.h);
+    }
   }
 
   // 开始新回合
@@ -335,6 +477,9 @@ export default class BattleScene extends Phaser.Scene {
     // 清除触屏单次输入
     this.input1.clearTouchActions();
     this.input2.clearTouchActions();
+
+    // 训练模式专属更新
+    this.updateTraining();
   }
 
   // 角色推挤
@@ -435,12 +580,23 @@ export default class BattleScene extends Phaser.Scene {
       else if (isHeavy) this.sfx.hitHeavy();
       else this.sfx.hitLight();
 
+      // 元素克制可视化（仅必杀技触发）
+      if (isSpecial && hitData.element) {
+        this.showElementEffect(attacker, defender);
+      }
+
       // 伤害数字弹出
       const dmg = hitData.damage || 10;
       this.showDamageNumber(defender.x, defender.y - 60, dmg, attacker.comboCount, attacker.data.color);
 
       if (result === 'ko') {
-        this.endRound(attacker.playerIndex === 0 ? 1 : 2);
+        if (this.isTraining) {
+          // 训练模式：KO 后自动重置 HP
+          defender.hp = defender.maxHp;
+          this.hud.resetGhostHP();
+        } else {
+          this.endRound(attacker.playerIndex === 0 ? 1 : 2);
+        }
       }
     } else if (result === 'blocked') {
       // 防御特效
@@ -566,5 +722,76 @@ export default class BattleScene extends Phaser.Scene {
         this.cameras.main.setScroll(0, 0);
       }
     }
+  }
+
+  // 元素克制可视化
+  showElementEffect(attacker, defender) {
+    const atkElement = attacker.data.element;
+    const defElement = defender.data.element;
+    if (!atkElement || !defElement) return;
+
+    const chart = ELEMENT_CHART[atkElement];
+    if (!chart) return;
+
+    let label = '';
+    let color = '#ffffff';
+    let effectColor = 0xffffff;
+
+    if (chart.strongVs === defElement) {
+      // 克制
+      label = '🔥 克制！';
+      color = '#ff4444';
+      effectColor = 0xff2200;
+    } else if (chart.weakVs === defElement) {
+      // 被抵抗
+      label = '🛡️ 抵抗...';
+      color = '#6688ff';
+      effectColor = 0x4466ff;
+    } else {
+      return; // 无克制关系不显示
+    }
+
+    // 文字提示
+    const x = defender.x;
+    const y = defender.y - 100;
+    const txt = this.add.text(x, y, label, {
+      fontSize: '20px',
+      fontFamily: 'Arial Black, Arial',
+      fontStyle: 'bold',
+      color: color,
+      stroke: '#000000',
+      strokeThickness: 3,
+    }).setOrigin(0.5).setDepth(160).setScale(0.5);
+
+    this.tweens.add({
+      targets: txt,
+      scale: 1.2,
+      y: y - 30,
+      duration: 300,
+      ease: 'Back.easeOut',
+      onComplete: () => {
+        this.tweens.add({
+          targets: txt,
+          alpha: 0,
+          y: y - 60,
+          scale: 0.8,
+          duration: 600,
+          onComplete: () => txt.destroy(),
+        });
+      },
+    });
+
+    // 元素光环效果
+    const ring = this.add.circle(x, defender.y - 40, 8)
+      .setStrokeStyle(2, effectColor, 0.8)
+      .setDepth(155);
+    this.tweens.add({
+      targets: ring,
+      scale: 8,
+      alpha: 0,
+      duration: 500,
+      ease: 'Cubic.easeOut',
+      onComplete: () => ring.destroy(),
+    });
   }
 }

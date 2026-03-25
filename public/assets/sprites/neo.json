@@ -1,0 +1,518 @@
+{
+  "frames": [
+    {
+      "filename": "neo_idle_0",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_idle_1",
+      "frame": {
+        "x": 160,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_idle_2",
+      "frame": {
+        "x": 320,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_idle_3",
+      "frame": {
+        "x": 480,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_walk_0",
+      "frame": {
+        "x": 0,
+        "y": 106,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_walk_1",
+      "frame": {
+        "x": 160,
+        "y": 106,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_walk_2",
+      "frame": {
+        "x": 320,
+        "y": 106,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_walk_3",
+      "frame": {
+        "x": 480,
+        "y": 106,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_light_0",
+      "frame": {
+        "x": 0,
+        "y": 212,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_light_1",
+      "frame": {
+        "x": 160,
+        "y": 212,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_light_2",
+      "frame": {
+        "x": 320,
+        "y": 212,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_light_3",
+      "frame": {
+        "x": 480,
+        "y": 212,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_heavy_0",
+      "frame": {
+        "x": 0,
+        "y": 318,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_heavy_1",
+      "frame": {
+        "x": 160,
+        "y": 318,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_heavy_2",
+      "frame": {
+        "x": 320,
+        "y": 318,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_heavy_3",
+      "frame": {
+        "x": 480,
+        "y": 318,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_special_0",
+      "frame": {
+        "x": 0,
+        "y": 424,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_special_1",
+      "frame": {
+        "x": 160,
+        "y": 424,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_special_2",
+      "frame": {
+        "x": 320,
+        "y": 424,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_special_3",
+      "frame": {
+        "x": 480,
+        "y": 424,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_hitstun_0",
+      "frame": {
+        "x": 0,
+        "y": 530,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_block_0",
+      "frame": {
+        "x": 160,
+        "y": 530,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_knockdown_0",
+      "frame": {
+        "x": 320,
+        "y": 530,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    },
+    {
+      "filename": "neo_win_0",
+      "frame": {
+        "x": 480,
+        "y": 530,
+        "w": 160,
+        "h": 106
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 106
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 106
+      }
+    }
+  ],
+  "meta": {
+    "app": "fighting-game",
+    "image": "neo.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 640,
+      "h": 640
+    },
+    "scale": "1"
+  }
+}

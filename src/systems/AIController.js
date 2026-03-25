@@ -10,6 +10,7 @@ export default class AIController {
 
     // 决策参数（根据难度调整）
     const configs = {
+      dummy:  { reactionDelay: 999, aggressiveness: 0, blockChance: 0, specialChance: 0 },
       easy:   { reactionDelay: 30, aggressiveness: 0.2, blockChance: 0.15, specialChance: 0.05 },
       normal: { reactionDelay: 15, aggressiveness: 0.4, blockChance: 0.30, specialChance: 0.10 },
       hard:   { reactionDelay: 5,  aggressiveness: 0.6, blockChance: 0.50, specialChance: 0.20 },
