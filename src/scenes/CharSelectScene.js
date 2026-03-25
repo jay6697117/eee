@@ -75,7 +75,7 @@ export default class CharSelectScene extends Phaser.Scene {
     // ==================== 角色卡片 ====================
     const charList = Object.values(CHARACTERS);
     const cardWidth = 240;
-    const cardHeight = 380;
+    const cardHeight = 440;
     const totalWidth = charList.length * cardWidth + (charList.length - 1) * 40;
     const startX = (width - totalWidth) / 2 + cardWidth / 2;
 
