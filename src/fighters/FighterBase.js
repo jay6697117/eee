@@ -68,16 +68,9 @@ export default class FighterBase {
       this.sprite.setFlipX(true);
     }
 
-    // 名字标签（位置将在 updateLabels 中动态计算）
-    this.nameText = this.scene.add.text(this.x, this.y - 20, this.data.name, {
-      fontSize: '13px', fontFamily: 'Arial', color: '#ffffff',
-      stroke: '#000000', strokeThickness: 3,
-    }).setOrigin(0.5).setDepth(10);
-
-    // 元素图标
-    this.elementIcon = this.scene.add.text(this.x, this.y - 35, this.getElementEmoji(), {
-      fontSize: '14px',
-    }).setOrigin(0.5).setDepth(10);
+    // 名字标签和元素图标已移至顶部 HUD，战斗中不再显示
+    this.nameText = null;
+    this.elementIcon = null;
 
     // 播放待机动画
     this.sprite.play(`${this.data.id}_idle`);
