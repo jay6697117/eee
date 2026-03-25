@@ -503,6 +503,32 @@
         "w": 160,
         "h": 106
       }
+    },
+    {
+      "filename": "neo_crouch_0",
+      "frame": {
+        "x": 5,
+        "y": 645,
+        "w": 87,
+        "h": 97
+      },
+      "sourceSize": {
+        "w": 87,
+        "h": 97
+      }
+    },
+    {
+      "filename": "neo_jump_0",
+      "frame": {
+        "x": 102,
+        "y": 645,
+        "w": 74,
+        "h": 124
+      },
+      "sourceSize": {
+        "w": 74,
+        "h": 124
+      }
     }
   ],
   "meta": {

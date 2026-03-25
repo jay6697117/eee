@@ -503,6 +503,48 @@
         "w": 106,
         "h": 160
       }
+    },
+    {
+      "filename": "lingshuang_crouch_0",
+      "frame": {
+        "x": 5,
+        "y": 778,
+        "w": 84,
+        "h": 113
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 84,
+        "h": 113
+      },
+      "sourceSize": {
+        "w": 84,
+        "h": 113
+      }
+    },
+    {
+      "filename": "lingshuang_jump_0",
+      "frame": {
+        "x": 99,
+        "y": 778,
+        "w": 70,
+        "h": 123
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 70,
+        "h": 123
+      },
+      "sourceSize": {
+        "w": 70,
+        "h": 123
+      }
     }
   ],
   "meta": {

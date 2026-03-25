@@ -136,9 +136,9 @@ export default class BattleScene extends Phaser.Scene {
     createAnim('ignis_block', 'ignis',
       ['ignis_idle_0'], 10, false);
     createAnim('ignis_jump', 'ignis',
-      ['ignis_hit_2'], 10, true);
+      ['ignis_jump_0'], 10, true);
     createAnim('ignis_crouch', 'ignis',
-      ['ignis_idle_5'], 10, true);
+      ['ignis_crouch_0'], 10, true);
 
     // === Ling Shuang (凌霜) 动画 — 4行x6列（与 Ignis 一致）===
     createAnim('lingShuang_idle', 'lingshuang',
@@ -154,9 +154,9 @@ export default class BattleScene extends Phaser.Scene {
     createAnim('lingShuang_block', 'lingshuang',
       ['lingshuang_idle_0'], 10, false);
     createAnim('lingShuang_jump', 'lingshuang',
-      ['lingshuang_hit_2'], 10, true);
+      ['lingshuang_jump_0'], 10, true);
     createAnim('lingShuang_crouch', 'lingshuang',
-      ['lingshuang_idle_5'], 10, true);
+      ['lingshuang_crouch_0'], 10, true);
 
     // === Neo (奈欧) 动画 — 4帧/行 ===
     createAnim('neo_idle', 'neo',
@@ -172,9 +172,9 @@ export default class BattleScene extends Phaser.Scene {
     createAnim('neo_block', 'neo',
       ['neo_block_0'], 10, false);
     createAnim('neo_jump', 'neo',
-      ['neo_walk_2'], 10, true);
+      ['neo_jump_0'], 10, true);
     createAnim('neo_crouch', 'neo',
-      ['neo_block_0'], 10, true);
+      ['neo_crouch_0'], 10, true);
   }
 
   // 创建场景背景

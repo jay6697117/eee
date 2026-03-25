@@ -82,12 +82,29 @@ def process_sprite(input_path, output_image_path, output_json_path):
     # Create JSON Atlas format for Phaser 3
     frames = []
     
-    anim_names = ['idle', 'walk', 'attack', 'hit', 'fall', 'extra1', 'extra2']
+    # We map row index to a base name or handle specially
+    anim_names = ['idle', 'walk', 'attack', 'hit', 'crouch_jump', 'extra1', 'extra2']
     
+    # Neo has different rows, it has 6 rows. We should handle the names based on what the original had.
+    # Or actually, we can just use the order logic:
     for row_idx, row in enumerate(rows):
         anim_name = anim_names[row_idx] if row_idx < len(anim_names) else f'anim{row_idx}'
         for col_idx, box in enumerate(row):
-            frame_name = f"{anim_name}_{col_idx}"
+            # Special case for the 5th row (index 4) which contains crouch and jump
+            if row_idx == 4 and col_idx == 0:
+                frame_name = f"{os.path.basename(output_image_path).split('.')[0]}_crouch_0"
+            elif row_idx == 4 and col_idx == 1:
+                frame_name = f"{os.path.basename(output_image_path).split('.')[0]}_jump_0"
+            else:
+                # Normal naming
+                if 'neo' in input_path:
+                    # Neo mapping
+                    neo_names = ['idle', 'walk', 'light', 'heavy', 'special', 'hitstun']
+                    n_name = neo_names[row_idx] if row_idx < len(neo_names) else 'extra'
+                    frame_name = f"{os.path.basename(output_image_path).split('.')[0]}_{n_name}_{col_idx}"
+                else:
+                    frame_name = f"{os.path.basename(output_image_path).split('.')[0]}_{anim_name}_{col_idx}"
+            
             frames.append({
                 "filename": frame_name,
                 "frame": {"x": box['x'], "y": box['y'], "w": box['w'], "h": box['h']},
@@ -113,3 +130,7 @@ process_sprite('/Users/zhangjinhui/Desktop/eee/public/assets/sprites/ignis_raw.p
 process_sprite('/Users/zhangjinhui/Desktop/eee/public/assets/sprites/lingshuang_raw.png', 
                '/Users/zhangjinhui/Desktop/eee/public/assets/sprites/lingshuang.png', 
                '/Users/zhangjinhui/Desktop/eee/public/assets/sprites/lingshuang.json')
+
+process_sprite('/Users/zhangjinhui/Desktop/eee/public/assets/sprites/neo_raw.png', 
+               '/Users/zhangjinhui/Desktop/eee/public/assets/sprites/neo.png', 
+               '/Users/zhangjinhui/Desktop/eee/public/assets/sprites/neo.json')

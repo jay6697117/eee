@@ -503,6 +503,48 @@
         "w": 106,
         "h": 160
       }
+    },
+    {
+      "filename": "ignis_crouch_0",
+      "frame": {
+        "x": 5,
+        "y": 796,
+        "w": 98,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 98,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 98,
+        "h": 100
+      }
+    },
+    {
+      "filename": "ignis_jump_0",
+      "frame": {
+        "x": 113,
+        "y": 796,
+        "w": 86,
+        "h": 141
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 86,
+        "h": 141
+      },
+      "sourceSize": {
+        "w": 86,
+        "h": 141
+      }
     }
   ],
   "meta": {
