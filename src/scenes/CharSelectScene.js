@@ -75,7 +75,7 @@ export default class CharSelectScene extends Phaser.Scene {
     // ==================== 角色卡片 ====================
     const charList = Object.values(CHARACTERS);
     const cardWidth = 240;
-    const cardHeight = 380;
+    const cardHeight = 460;
     const totalWidth = charList.length * cardWidth + (charList.length - 1) * 40;
     const startX = (width - totalWidth) / 2 + cardWidth / 2;
 
@@ -101,8 +101,10 @@ export default class CharSelectScene extends Phaser.Scene {
       if (this.textures.exists(atlasKey)) {
         const firstFrame = this.textures.get(atlasKey).getFrameNames()[0];
         if (firstFrame) {
-          preview = this.add.sprite(cx, cy - 20, atlasKey, firstFrame)
-            .setScale(1.8)
+          // Neo 帧高106px，其他角色帧高160px，需要差异化缩放
+          const previewScale = char.id === 'neo' ? 2.6 : 1.8;
+          preview = this.add.sprite(cx, cy - 30, atlasKey, firstFrame)
+            .setScale(previewScale)
             .setOrigin(0.5);
         }
       }
@@ -113,21 +115,21 @@ export default class CharSelectScene extends Phaser.Scene {
       }
 
       // 角色名
-      this.add.text(cx, cy + cardHeight / 2 - 80, `${elemEmoji[char.element] || '⭐'} ${char.name}`, {
+      this.add.text(cx, cy + cardHeight / 2 - 100, `${elemEmoji[char.element] || '⭐'} ${char.name}`, {
         fontSize: '22px',
         fontFamily: 'Arial Black, Arial',
         color: '#ffffff',
       }).setOrigin(0.5);
 
       // 称号
-      this.add.text(cx, cy + cardHeight / 2 - 55, char.title, {
+      this.add.text(cx, cy + cardHeight / 2 - 78, char.title, {
         fontSize: '13px',
         fontFamily: 'Arial',
         color: '#aa88dd',
       }).setOrigin(0.5);
 
       // 属性条
-      const statsY = cy + cardHeight / 2 - 30;
+      const statsY = cy + cardHeight / 2 - 58;
       const stats = [
         { label: 'HP', value: char.stats.hp / 10, color: 0x44ff44 },
         { label: 'SPD', value: char.stats.walkSpeed * 20, color: 0x44aaff },
@@ -153,10 +155,11 @@ export default class CharSelectScene extends Phaser.Scene {
         .setFillStyle(0x000000, 0);
 
       // Hover 效果
+      const baseScale = char.id === 'neo' ? 2.6 : 1.8;
       card.on('pointerover', () => {
         card.setFillStyle(0x332266, 0.6);
         card.setStrokeStyle(2, 0xaa88ff, 0.9);
-        if (preview.setScale) preview.setScale(preview.scaleX > 1 ? 1.95 : 1);
+        if (preview.setScale) preview.setScale(baseScale * 1.08);
       });
 
       card.on('pointerout', () => {
@@ -165,7 +168,7 @@ export default class CharSelectScene extends Phaser.Scene {
           card.setStrokeStyle(2, 0x6644aa, 0.6);
           highlight.setStrokeStyle(3, elemColors[char.element] || 0xffffff, 0);
         }
-        if (preview.setScale) preview.setScale(preview.scaleX > 1.5 ? 1.8 : 1);
+        if (preview.setScale) preview.setScale(baseScale);
       });
 
       // 点击选择
