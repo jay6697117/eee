@@ -2,13 +2,20 @@ import Phaser from 'phaser';
 import { STAGE, BATTLE, JUICE, STATES } from '../config/constants.js';
 import { CHARACTERS, ELEMENT_CHART } from '../config/characters.js';
 import InputManager from '../systems/InputManager.js';
+import AIController from '../systems/AIController.js';
 import FighterBase from '../fighters/FighterBase.js';
 import BattleHUD from '../ui/BattleHUD.js';
+import TouchControls from '../ui/TouchControls.js';
 
 // 战斗场景 — 游戏核心
 export default class BattleScene extends Phaser.Scene {
   constructor() {
     super({ key: 'BattleScene' });
+  }
+
+  init(data) {
+    // 从角色选择场景接收配置
+    this.battleConfig = data || {};
   }
 
   preload() {
@@ -24,17 +31,29 @@ export default class BattleScene extends Phaser.Scene {
     // 场景背景
     this.createBackground();
 
+    // 解析角色配置
+    const p1Key = this.battleConfig.p1Char || 'ignis';
+    const p2Key = this.battleConfig.p2Char || 'lingShuang';
+    const p1Data = Object.values(CHARACTERS).find(c => c.id === p1Key) || CHARACTERS.ignis;
+    const p2Data = Object.values(CHARACTERS).find(c => c.id === p2Key) || CHARACTERS.lingShuang;
+
     // 创建角色
-    this.p1 = new FighterBase(this, STAGE.P1_START_X, STAGE.GROUND_Y, CHARACTERS.ignis, 0);
-    this.p2 = new FighterBase(this, STAGE.P2_START_X, STAGE.GROUND_Y, CHARACTERS.lingShuang, 1);
+    this.p1 = new FighterBase(this, STAGE.P1_START_X, STAGE.GROUND_Y, p1Data, 0);
+    this.p2 = new FighterBase(this, STAGE.P2_START_X, STAGE.GROUND_Y, p2Data, 1);
+
+    // 保存角色数据引用
+    this.p1Data = p1Data;
+    this.p2Data = p2Data;
 
     // 创建输入
     this.input1 = new InputManager(this, 0);
-    this.input2 = new InputManager(this, 1);
+    // 根据模式配置决定 P2 是 AI 还是玩家
+    this.useAI = this.battleConfig.useAI !== false;
+    this.input2 = this.useAI ? new AIController(this, 'normal') : new InputManager(this, 1);
 
     // 创建 HUD
     this.hud = new BattleHUD(this);
-    this.hud.setNames(CHARACTERS.ignis, CHARACTERS.lingShuang);
+    this.hud.setNames(p1Data, p2Data);
 
     // 对战状态
     this.roundNumber = 1;
@@ -54,6 +73,9 @@ export default class BattleScene extends Phaser.Scene {
 
     // 操作提示
     this.createControlsHint();
+
+    // 触屏控制（仅在触屏设备或 ?touch=1 时显示）
+    this.touchControls = new TouchControls(this, this.input1);
 
     // 开始新回合
     this.startRound();
@@ -226,45 +248,59 @@ export default class BattleScene extends Phaser.Scene {
   // 比赛结束
   endMatch(winner) {
     this.battleState = 'matchEnd';
-    const winnerName = winner === 1 ? CHARACTERS.ignis.name : CHARACTERS.lingShuang.name;
+    const winnerName = winner === 1 ? this.p1Data.name : this.p2Data.name;
     this.hud.showAnnounce(`${winnerName} WINS!`, 3000);
 
-    // 3 秒后重新开始
+    // 4 秒后返回主菜单
     this.time.delayedCall(4000, () => {
-      this.p1Wins = 0;
-      this.p2Wins = 0;
-      this.roundNumber = 1;
-      this.startRound();
+      this.scene.start('MainMenuScene');
     });
   }
 
   update(time, delta) {
-    // 战斗中才更新
-    if (this.battleState !== 'fighting') {
-      this.hud.updateHP(this.p1, this.p2);
-      this.hud.updateRage(this.p1, this.p2);
-      return;
+    // 战斗外禁用输入
+    const isFighting = this.battleState === 'fighting';
+    
+    // 如果不是战斗状态，清空输入
+    if (!isFighting) {
+      this.input1.clearTouchActions();
+      this.input2.clearTouchActions();
+      // 这里可以替换为一个伪造的空 InputManager 或者直接在 FighterBase 中判断
     }
 
-    // 更新计时器
-    this.roundTimer -= delta / 1000;
-    if (this.roundTimer <= 0) {
-      this.roundTimer = 0;
-      // 时间到 — 血量多的获胜
-      const winner = this.p1.hp > this.p2.hp ? 1 : this.p2.hp > this.p1.hp ? 2 : 0;
-      if (winner > 0) {
-        this.endRound(winner);
-      } else {
-        // 平局 — 额外回合
-        this.roundNumber++;
-        this.startRound();
+    // 只有战斗中才更新计时器
+    if (this.battleState === 'fighting') {
+      this.roundTimer -= delta / 1000;
+      if (this.roundTimer <= 0) {
+        this.roundTimer = 0;
+        // 时间到 — 血量多的获胜
+        const winner = this.p1.hp > this.p2.hp ? 1 : this.p2.hp > this.p1.hp ? 2 : 0;
+        if (winner > 0) {
+          this.endRound(winner);
+        } else {
+          // 平局 — 额外回合
+          this.roundNumber++;
+          this.startRound();
+        }
       }
-      return;
     }
 
-    // 更新角色
-    this.p1.update(this.input1, this.p2);
-    this.p2.update(this.input2, this.p1);
+    // 角色更新需要传入真实的输入状态，但如果不是 fighting，传入一个空输入
+    const emptyInput = {
+      getState: () => ({ left: false, right: false, up: false, down: false, light: false, heavy: false, special: false, block: false }),
+      checkSpecialInput: () => null
+    };
+
+    const p1Input = isFighting ? this.input1 : emptyInput;
+    const p2Input = isFighting ? this.input2 : emptyInput;
+
+    // AI 决策
+    if (isFighting && this.useAI && this.input2.think) {
+      this.input2.think(this.p2, this.p1);
+    }
+
+    this.p1.update(p1Input, this.p2);
+    this.p2.update(p2Input, this.p1);
 
     // 角色推挤
     this.handlePushback();
@@ -292,12 +328,32 @@ export default class BattleScene extends Phaser.Scene {
     const dist = Math.abs(this.p1.x - this.p2.x);
     if (dist < 40) {
       const overlap = (40 - dist) / 2;
+      
+      // 不仅推开，还要检查边界，防止一方把另一方无限推出版边
+      let p1Push = 0;
+      let p2Push = 0;
+
       if (this.p1.x < this.p2.x) {
-        this.p1.x -= overlap;
-        this.p2.x += overlap;
+        p1Push = -overlap;
+        p2Push = overlap;
       } else {
-        this.p1.x += overlap;
-        this.p2.x -= overlap;
+        p1Push = overlap;
+        p2Push = -overlap;
+      }
+
+      // 如果 P1 到达左边界，增加 P2 的推挤幅度
+      if (this.p1.x + p1Push < STAGE.LEFT_BOUNDARY) {
+        this.p2.x += Math.abs(p1Push); // 把剩下的推力全部给 p2
+        this.p1.x = STAGE.LEFT_BOUNDARY;
+      } 
+      // 如果 P2 到达右边界，增加 P1 的推挤幅度
+      else if (this.p2.x + p2Push > STAGE.RIGHT_BOUNDARY) {
+        this.p1.x -= Math.abs(p2Push);
+        this.p2.x = STAGE.RIGHT_BOUNDARY;
+      } 
+      else {
+        this.p1.x += p1Push;
+        this.p2.x += p2Push;
       }
     }
   }
@@ -356,8 +412,13 @@ export default class BattleScene extends Phaser.Scene {
       const shakeAmount = isSpecial ? JUICE.SHAKE_SPECIAL : isHeavy ? JUICE.SHAKE_HEAVY : JUICE.SHAKE_LIGHT;
       this.shakeIntensity = shakeAmount;
 
-      // 命中特效 — 闪光
-      this.createHitEffect(defender.x, defender.y - 40, attacker.data.color);
+      // 命中特效 — 闪光 + 粒子
+      const hitLevel = isSpecial ? 'special' : isHeavy ? 'heavy' : 'light';
+      this.createHitEffect(defender.x, defender.y - 40, attacker.data.color, hitLevel);
+
+      // 伤害数字弹出
+      const dmg = hitData.damage || 10;
+      this.showDamageNumber(defender.x, defender.y - 60, dmg, attacker.comboCount, attacker.data.color);
 
       if (result === 'ko') {
         this.endRound(attacker.playerIndex === 0 ? 1 : 2);
@@ -370,42 +431,95 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   // 命中特效
-  createHitEffect(x, y, color) {
+  createHitEffect(x, y, color, level = 'light') {
     // 闪光圆
     const flash = this.add.circle(x, y, 5, 0xffffff, 1).setDepth(50);
     this.tweens.add({
       targets: flash,
-      scale: 4,
+      scale: level === 'special' ? 8 : level === 'heavy' ? 5 : 4,
       alpha: 0,
       duration: 200,
       onComplete: () => flash.destroy(),
     });
 
-    // 彩色冲击
+    // 彩色冲击波
     const impact = this.add.circle(x, y, 3, color, 0.8).setDepth(50);
     this.tweens.add({
       targets: impact,
-      scale: 6,
+      scale: level === 'special' ? 10 : level === 'heavy' ? 7 : 6,
       alpha: 0,
       duration: 300,
       onComplete: () => impact.destroy(),
     });
 
-    // 粒子飞溅
-    for (let i = 0; i < 6; i++) {
-      const angle = Phaser.Math.Between(0, 360);
-      const speed = Phaser.Math.Between(2, 8);
-      const particle = this.add.circle(x, y, Phaser.Math.Between(2, 4), color, 1).setDepth(50);
+    // 必杀技环形冲击波
+    if (level === 'special') {
+      const ring = this.add.circle(x, y, 5).setStrokeStyle(3, color, 0.8).setDepth(50);
+      this.tweens.add({
+        targets: ring,
+        scale: 15,
+        alpha: 0,
+        duration: 500,
+        ease: 'Cubic.easeOut',
+        onComplete: () => ring.destroy(),
+      });
+    }
+
+    // 粒子飞溅（数量随攻击等级增加）
+    const count = level === 'special' ? 16 : level === 'heavy' ? 10 : 6;
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 / count) * i + Phaser.Math.FloatBetween(-0.3, 0.3);
+      const speed = Phaser.Math.Between(3, level === 'special' ? 14 : 8);
+      const size = Phaser.Math.Between(1, level === 'special' ? 5 : 3);
+      const particle = this.add.circle(x, y, size, color, 1).setDepth(50);
       this.tweens.add({
         targets: particle,
-        x: x + Math.cos(angle) * speed * 20,
-        y: y + Math.sin(angle) * speed * 20,
+        x: x + Math.cos(angle) * speed * 25,
+        y: y + Math.sin(angle) * speed * 25,
         alpha: 0,
-        scale: 0.3,
-        duration: 300,
+        scale: 0.2,
+        duration: Phaser.Math.Between(200, 400),
         onComplete: () => particle.destroy(),
       });
     }
+
+    // 屏幕边缘闪光（必杀技时）
+    if (level === 'special') {
+      const vignette = this.add.rectangle(640, 360, 1280, 720, color, 0.15).setDepth(100);
+      this.tweens.add({
+        targets: vignette,
+        alpha: 0,
+        duration: 300,
+        onComplete: () => vignette.destroy(),
+      });
+    }
+  }
+
+  // 伤害数字弹出
+  showDamageNumber(x, y, damage, comboCount, color) {
+    const isCombo = comboCount > 1;
+    const fontSize = isCombo ? Math.min(16 + comboCount * 3, 36) : 18;
+    const displayText = isCombo ? `${damage} x${comboCount}` : `${damage}`;
+    
+    const dmgText = this.add.text(x + Phaser.Math.Between(-20, 20), y, displayText, {
+      fontSize: `${fontSize}px`,
+      fontFamily: 'Arial Black, Arial',
+      fontStyle: 'bold',
+      color: isCombo ? '#ffdd00' : '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 3,
+    }).setOrigin(0.5).setDepth(100);
+
+    // 弹出动画：向上浮动 + 淡出
+    this.tweens.add({
+      targets: dmgText,
+      y: y - 60,
+      alpha: 0,
+      scale: isCombo ? 1.3 : 1.0,
+      duration: 800,
+      ease: 'Cubic.easeOut',
+      onComplete: () => dmgText.destroy(),
+    });
   }
 
   // 防御特效

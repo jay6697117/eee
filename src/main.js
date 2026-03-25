@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+import MainMenuScene from './scenes/MainMenuScene.js';
+import CharSelectScene from './scenes/CharSelectScene.js';
 import BattleScene from './scenes/BattleScene.js';
 
 // 游戏配置
@@ -12,8 +14,8 @@ const config = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  // 不使用 Arcade 物理（手动处理更精确）
-  scene: [BattleScene],
+  // 场景流程：主菜单 → 角色选择 → 战斗
+  scene: [MainMenuScene, CharSelectScene, BattleScene],
   input: {
     touch: true,
     keyboard: true,
