@@ -60,7 +60,7 @@ export default class FighterBase {
     this.sprite.setOrigin(0.5, 1); // 底部中心对齐
     this.sprite.setScale(spriteScale);
     this.sprite.setDepth(5); // 确保角色在背景之上
-    
+
     // 如果是 P2，初始朝向左边我们需要水平翻转
     if (this.facing === -1) {
       this.sprite.setFlipX(true);
@@ -76,7 +76,7 @@ export default class FighterBase {
     this.elementIcon = this.scene.add.text(this.x, this.y - 35, this.getElementEmoji(), {
       fontSize: '14px',
     }).setOrigin(0.5).setDepth(10);
-    
+
     // 播放待机动画
     this.sprite.play(`${this.data.id}_idle`);
   }
@@ -101,13 +101,17 @@ export default class FighterBase {
       animKey = `${charId}_walk`;
     } else if (this.state === STATES.BLOCK || this.state === STATES.BLOCK_STUN || this.state === STATES.BLOCK_LOW) {
       animKey = `${charId}_block`;
+    } else if (this.state === STATES.JUMP_UP || this.state === STATES.JUMP_FALL || this.state === STATES.AIR_ATTACK) {
+      animKey = `${charId}_jump`;
+    } else if (this.state === STATES.CROUCH || this.state === STATES.CROUCH_ATTACK) {
+      animKey = `${charId}_crouch`;
     }
 
     // 只有动画改变时才重新播放
     if (this.sprite.anims.currentAnim?.key !== animKey) {
       this.sprite.play(animKey);
     }
-    
+
     // 停顿效果处理
     if (this.hitStopFrames > 0) {
       this.sprite.anims.pause();
