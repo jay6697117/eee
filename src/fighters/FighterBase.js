@@ -50,29 +50,32 @@ export default class FighterBase {
 
   // 创建角色视觉表现（使用真正的精灵图集）
   createVisuals() {
-    // 基础缩放比例（帧大约 80x130，场景高720，角色应约占 1/4 高度 ≈ 180px）
-    const scale = 1.4;
+    // 差异化缩放：ignis 帧高 160px，lingshuang 帧高 128px
+    // 目标角色显示高度约 180px，各自计算所需缩放
+    const targetHeight = 180; // 场景高 720，角色约占 1/4
+    const spriteScale = this.data.spriteScale || 1.4;
 
     // 创建主精灵
     this.sprite = this.scene.add.sprite(this.x, this.y, this.data.id);
     this.sprite.setOrigin(0.5, 1); // 底部中心对齐
-    this.sprite.setScale(scale);
+    this.sprite.setScale(spriteScale);
+    this.sprite.setDepth(5); // 确保角色在背景之上
     
     // 如果是 P2，初始朝向左边我们需要水平翻转
     if (this.facing === -1) {
       this.sprite.setFlipX(true);
     }
 
-    // 名字标签
-    this.nameText = this.scene.add.text(this.x, this.y - 140, this.data.name, {
-      fontSize: '14px', fontFamily: 'Arial', color: '#ffffff',
-      stroke: '#000000', strokeThickness: 2,
-    }).setOrigin(0.5);
+    // 名字标签（位置将在 updateLabels 中动态计算）
+    this.nameText = this.scene.add.text(this.x, this.y - 20, this.data.name, {
+      fontSize: '13px', fontFamily: 'Arial', color: '#ffffff',
+      stroke: '#000000', strokeThickness: 3,
+    }).setOrigin(0.5).setDepth(10);
 
     // 元素图标
-    this.elementIcon = this.scene.add.text(this.x, this.y - 155, this.getElementEmoji(), {
-      fontSize: '16px',
-    }).setOrigin(0.5);
+    this.elementIcon = this.scene.add.text(this.x, this.y - 35, this.getElementEmoji(), {
+      fontSize: '14px',
+    }).setOrigin(0.5).setDepth(10);
     
     // 播放待机动画
     this.sprite.play(`${this.data.id}_idle`);
@@ -492,13 +495,14 @@ export default class FighterBase {
     this.stateTimer = 0;
   }
 
-  // 更新标签位置
+  // 更新标签位置（根据精灵实际显示高度动态定位）
   updateLabels() {
+    const spriteH = this.sprite ? this.sprite.displayHeight : 120;
     if (this.nameText) {
-      this.nameText.setPosition(this.x, this.y - 95);
+      this.nameText.setPosition(this.x, this.y - spriteH - 5);
     }
     if (this.elementIcon) {
-      this.elementIcon.setPosition(this.x, this.y - 110);
+      this.elementIcon.setPosition(this.x, this.y - spriteH - 22);
     }
   }
 

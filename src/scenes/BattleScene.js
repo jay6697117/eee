@@ -89,21 +89,17 @@ export default class BattleScene extends Phaser.Scene {
     createAnim('ignis_block', 'ignis',
       ['ignis_idle_0'], 10, false);
 
-    // === Ling Shuang (凌霜) 动画 — 5行x8列 ===
+    // === Ling Shuang (凌霜) 动画 — 4行x6列（与 Ignis 一致）===
     createAnim('lingShuang_idle', 'lingshuang',
-      ['lingshuang_idle_0','lingshuang_idle_1','lingshuang_idle_2','lingshuang_idle_3',
-       'lingshuang_idle_4','lingshuang_idle_5','lingshuang_idle_6','lingshuang_idle_7'], 8, true);
+      ['lingshuang_idle_0','lingshuang_idle_1','lingshuang_idle_2','lingshuang_idle_3','lingshuang_idle_4','lingshuang_idle_5'], 8, true);
     createAnim('lingShuang_walk', 'lingshuang',
-      ['lingshuang_walk_0','lingshuang_walk_1','lingshuang_walk_2','lingshuang_walk_3',
-       'lingshuang_walk_4','lingshuang_walk_5','lingshuang_walk_6','lingshuang_walk_7'], 10, true);
+      ['lingshuang_walk_0','lingshuang_walk_1','lingshuang_walk_2','lingshuang_walk_3','lingshuang_walk_4','lingshuang_walk_5'], 10, true);
     createAnim('lingShuang_attack', 'lingshuang',
-      ['lingshuang_attack_0','lingshuang_attack_1','lingshuang_attack_2','lingshuang_attack_3',
-       'lingshuang_attack_4','lingshuang_attack_5','lingshuang_attack_6','lingshuang_attack_7'], 14, false);
+      ['lingshuang_attack_0','lingshuang_attack_1','lingshuang_attack_2','lingshuang_attack_3','lingshuang_attack_4','lingshuang_attack_5'], 14, false);
     createAnim('lingShuang_hit', 'lingshuang',
-      ['lingshuang_hit_0','lingshuang_hit_1','lingshuang_hit_2','lingshuang_hit_3'], 10, false);
+      ['lingshuang_hit_0','lingshuang_hit_1','lingshuang_hit_2'], 10, false);
     createAnim('lingShuang_knockdown', 'lingshuang',
-      ['lingshuang_fall_0','lingshuang_fall_1','lingshuang_fall_2','lingshuang_fall_3',
-       'lingshuang_fall_4','lingshuang_fall_5','lingshuang_fall_6','lingshuang_fall_7'], 8, false);
+      ['lingshuang_hit_3','lingshuang_hit_4','lingshuang_hit_5'], 8, false);
     createAnim('lingShuang_block', 'lingshuang',
       ['lingshuang_idle_0'], 10, false);
   }

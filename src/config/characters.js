@@ -9,6 +9,7 @@ export const CHARACTERS = {
     element: 'fire',
     color: 0xff4422,       // 占位颜色
     accentColor: 0xff8844, // 强调色
+    spriteScale: 1.2,      // 精灵缩放（帧高 160px × 1.2 = 显示 192px）
 
     // 基础属性
     stats: {
@@ -70,6 +71,7 @@ export const CHARACTERS = {
     element: 'ice',
     color: 0x44ccff,
     accentColor: 0x88eeff,
+    spriteScale: 1.2,      // 精灵缩放（帧高 160px × 1.2 = 显示 192px）
 
     stats: {
       hp: 950,
