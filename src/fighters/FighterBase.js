@@ -48,22 +48,34 @@ export default class FighterBase {
     this.createVisuals();
   }
 
-  // 创建占位角色图形
+  // 创建角色视觉表现（使用真正的精灵图集）
   createVisuals() {
-    const color = this.data.color;
-    this.graphics = this.scene.add.graphics();
-    this.drawCharacter(color);
+    // 基础缩放比例（帧大约 80x130，场景高720，角色应约占 1/4 高度 ≈ 180px）
+    const scale = 1.4;
+
+    // 创建主精灵
+    this.sprite = this.scene.add.sprite(this.x, this.y, this.data.id);
+    this.sprite.setOrigin(0.5, 1); // 底部中心对齐
+    this.sprite.setScale(scale);
+    
+    // 如果是 P2，初始朝向左边我们需要水平翻转
+    if (this.facing === -1) {
+      this.sprite.setFlipX(true);
+    }
 
     // 名字标签
-    this.nameText = this.scene.add.text(this.x, this.y - 90, this.data.name, {
+    this.nameText = this.scene.add.text(this.x, this.y - 140, this.data.name, {
       fontSize: '14px', fontFamily: 'Arial', color: '#ffffff',
       stroke: '#000000', strokeThickness: 2,
     }).setOrigin(0.5);
 
     // 元素图标
-    this.elementIcon = this.scene.add.text(this.x, this.y - 105, this.getElementEmoji(), {
+    this.elementIcon = this.scene.add.text(this.x, this.y - 155, this.getElementEmoji(), {
       fontSize: '16px',
     }).setOrigin(0.5);
+    
+    // 播放待机动画
+    this.sprite.play(`${this.data.id}_idle`);
   }
 
   getElementEmoji() {
@@ -71,69 +83,41 @@ export default class FighterBase {
     return map[this.data.element] || '⭐';
   }
 
-  // 绘制占位角色（彩色方块人）
-  drawCharacter(color) {
-    this.graphics.clear();
-    const f = this.facing;
+  // 播放对应状态的动画
+  playStateAnimation() {
+    const charId = this.data.id;
+    let animKey = `${charId}_idle`;
 
-    if (this.flashTimer > 0) {
-      color = 0xffffff; // 受击闪白
-    }
-
-    const isCrouching = this.state === STATES.CROUCH || this.state === STATES.CROUCH_ATTACK;
-    const bodyH = isCrouching ? 50 : 80;
-    const bodyY = isCrouching ? -50 : -80;
-
-    // 身体
-    this.graphics.fillStyle(color, 1);
-    this.graphics.fillRoundedRect(-18, bodyY, 36, bodyH, 4);
-
-    // 头部
-    this.graphics.fillStyle(color, 1);
-    this.graphics.fillCircle(0, bodyY - 12, 14);
-
-    // 头发（用强调色）
-    this.graphics.fillStyle(this.data.accentColor, 1);
-    this.graphics.fillCircle(f * -3, bodyY - 16, 10);
-
-    // 腿
-    if (!isCrouching) {
-      const legOffset = (this.state === STATES.WALK_FORWARD || this.state === STATES.WALK_BACKWARD)
-        ? Math.sin(Date.now() * 0.01) * 8 : 0;
-      this.graphics.fillStyle(color, 0.8);
-      this.graphics.fillRect(-12, 0, 8, 20 + legOffset);
-      this.graphics.fillRect(4, 0, 8, 20 - legOffset);
-    }
-
-    // 手臂 / 攻击效果
     if (this.isAttacking()) {
-      // 攻击动画 — 手臂伸出
-      const attackColor = this.currentMove?.element ? this.data.color : 0xffffff;
-      this.graphics.fillStyle(attackColor, 0.9);
-      const armLen = this.state === STATES.ATTACK_HEAVY || this.state === STATES.SPECIAL1 || this.state === STATES.SPECIAL2 ? 50 : 35;
-      this.graphics.fillRect(f * 18, -55, f * armLen, 12);
+      animKey = `${charId}_attack`;
+    } else if (this.state === STATES.HIT || this.state === STATES.LAUNCH || this.state === STATES.JUGGLE) {
+      animKey = `${charId}_hit`;
+    } else if (this.state === STATES.KNOCKDOWN || this.state === STATES.GETUP) {
+      animKey = `${charId}_knockdown`;
+    } else if (this.state === STATES.WALK_FORWARD || this.state === STATES.WALK_BACKWARD) {
+      animKey = `${charId}_walk`;
+    } else if (this.state === STATES.BLOCK || this.state === STATES.BLOCK_STUN || this.state === STATES.BLOCK_LOW) {
+      animKey = `${charId}_block`;
+    }
 
-      // 必杀技特效
-      if (this.state === STATES.SPECIAL1 || this.state === STATES.SPECIAL2) {
-        this.graphics.fillStyle(this.data.color, 0.5);
-        this.graphics.fillCircle(f * (18 + armLen), -50, 20);
-        this.graphics.fillStyle(this.data.color, 0.3);
-        this.graphics.fillCircle(f * (18 + armLen), -50, 35);
-      }
+    // 只有动画改变时才重新播放
+    if (this.sprite.anims.currentAnim?.key !== animKey) {
+      this.sprite.play(animKey);
+    }
+    
+    // 停顿效果处理
+    if (this.hitStopFrames > 0) {
+      this.sprite.anims.pause();
     } else {
-      // 待机手臂
-      this.graphics.fillStyle(color, 0.8);
-      this.graphics.fillRect(f * 18, -65, f * 15, 8);
-      this.graphics.fillRect(f * -24, -60, f * -12, 8);
+      this.sprite.anims.resume();
     }
 
-    // 防御姿态
-    if (this.state === STATES.BLOCK || this.state === STATES.BLOCK_STUN) {
-      this.graphics.fillStyle(0x88aaff, 0.4);
-      this.graphics.fillRoundedRect(f * 15, -80, f * 20, 80, 8);
+    // 受击闪白处理
+    if (this.flashTimer > 0) {
+      this.sprite.setTintFill(0xffffff);
+    } else {
+      this.sprite.clearTint();
     }
-
-    this.graphics.setPosition(this.x, this.y);
   }
 
   // 判断是否在攻击状态
@@ -183,8 +167,12 @@ export default class FighterBase {
     // 物理更新
     this.updatePhysics();
 
-    // 重绘
-    this.drawCharacter(this.data.color);
+    // 更新精灵位置和朝向
+    this.sprite.setPosition(this.x, this.y);
+    this.sprite.setFlipX(this.facing === -1);
+    this.playStateAnimation();
+
+    // 更新文字标签
     this.updateLabels();
   }
 
@@ -537,7 +525,7 @@ export default class FighterBase {
 
   // 销毁
   destroy() {
-    if (this.graphics) this.graphics.destroy();
+    if (this.sprite) this.sprite.destroy();
     if (this.nameText) this.nameText.destroy();
     if (this.elementIcon) this.elementIcon.destroy();
   }

@@ -1,0 +1,527 @@
+{
+  "frames": [
+    {
+      "filename": "lingshuang_idle_0",
+      "frame": {
+        "x": 17,
+        "y": 25,
+        "w": 63,
+        "h": 87
+      },
+      "sourceSize": {
+        "w": 63,
+        "h": 87
+      }
+    },
+    {
+      "filename": "lingshuang_idle_1",
+      "frame": {
+        "x": 80,
+        "y": 26,
+        "w": 80,
+        "h": 86
+      },
+      "sourceSize": {
+        "w": 80,
+        "h": 86
+      }
+    },
+    {
+      "filename": "lingshuang_idle_2",
+      "frame": {
+        "x": 160,
+        "y": 26,
+        "w": 80,
+        "h": 87
+      },
+      "sourceSize": {
+        "w": 80,
+        "h": 87
+      }
+    },
+    {
+      "filename": "lingshuang_idle_3",
+      "frame": {
+        "x": 240,
+        "y": 26,
+        "w": 67,
+        "h": 87
+      },
+      "sourceSize": {
+        "w": 67,
+        "h": 87
+      }
+    },
+    {
+      "filename": "lingshuang_idle_4",
+      "frame": {
+        "x": 337,
+        "y": 26,
+        "w": 63,
+        "h": 85
+      },
+      "sourceSize": {
+        "w": 63,
+        "h": 85
+      }
+    },
+    {
+      "filename": "lingshuang_idle_5",
+      "frame": {
+        "x": 400,
+        "y": 26,
+        "w": 80,
+        "h": 86
+      },
+      "sourceSize": {
+        "w": 80,
+        "h": 86
+      }
+    },
+    {
+      "filename": "lingshuang_idle_6",
+      "frame": {
+        "x": 480,
+        "y": 26,
+        "w": 80,
+        "h": 87
+      },
+      "sourceSize": {
+        "w": 80,
+        "h": 87
+      }
+    },
+    {
+      "filename": "lingshuang_idle_7",
+      "frame": {
+        "x": 560,
+        "y": 27,
+        "w": 67,
+        "h": 86
+      },
+      "sourceSize": {
+        "w": 67,
+        "h": 86
+      }
+    },
+    {
+      "filename": "lingshuang_walk_0",
+      "frame": {
+        "x": 19,
+        "y": 142,
+        "w": 44,
+        "h": 93
+      },
+      "sourceSize": {
+        "w": 44,
+        "h": 93
+      }
+    },
+    {
+      "filename": "lingshuang_walk_1",
+      "frame": {
+        "x": 96,
+        "y": 142,
+        "w": 47,
+        "h": 92
+      },
+      "sourceSize": {
+        "w": 47,
+        "h": 92
+      }
+    },
+    {
+      "filename": "lingshuang_walk_2",
+      "frame": {
+        "x": 179,
+        "y": 142,
+        "w": 43,
+        "h": 93
+      },
+      "sourceSize": {
+        "w": 43,
+        "h": 93
+      }
+    },
+    {
+      "filename": "lingshuang_walk_3",
+      "frame": {
+        "x": 256,
+        "y": 142,
+        "w": 48,
+        "h": 93
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 93
+      }
+    },
+    {
+      "filename": "lingshuang_walk_4",
+      "frame": {
+        "x": 337,
+        "y": 142,
+        "w": 44,
+        "h": 93
+      },
+      "sourceSize": {
+        "w": 44,
+        "h": 93
+      }
+    },
+    {
+      "filename": "lingshuang_walk_5",
+      "frame": {
+        "x": 416,
+        "y": 142,
+        "w": 46,
+        "h": 93
+      },
+      "sourceSize": {
+        "w": 46,
+        "h": 93
+      }
+    },
+    {
+      "filename": "lingshuang_walk_6",
+      "frame": {
+        "x": 498,
+        "y": 142,
+        "w": 43,
+        "h": 93
+      },
+      "sourceSize": {
+        "w": 43,
+        "h": 93
+      }
+    },
+    {
+      "filename": "lingshuang_walk_7",
+      "frame": {
+        "x": 574,
+        "y": 142,
+        "w": 49,
+        "h": 93
+      },
+      "sourceSize": {
+        "w": 49,
+        "h": 93
+      }
+    },
+    {
+      "filename": "lingshuang_attack_0",
+      "frame": {
+        "x": 15,
+        "y": 269,
+        "w": 65,
+        "h": 115
+      },
+      "sourceSize": {
+        "w": 65,
+        "h": 115
+      }
+    },
+    {
+      "filename": "lingshuang_attack_1",
+      "frame": {
+        "x": 80,
+        "y": 296,
+        "w": 80,
+        "h": 61
+      },
+      "sourceSize": {
+        "w": 80,
+        "h": 61
+      }
+    },
+    {
+      "filename": "lingshuang_attack_2",
+      "frame": {
+        "x": 160,
+        "y": 273,
+        "w": 80,
+        "h": 111
+      },
+      "sourceSize": {
+        "w": 80,
+        "h": 111
+      }
+    },
+    {
+      "filename": "lingshuang_attack_3",
+      "frame": {
+        "x": 240,
+        "y": 273,
+        "w": 73,
+        "h": 111
+      },
+      "sourceSize": {
+        "w": 73,
+        "h": 111
+      }
+    },
+    {
+      "filename": "lingshuang_attack_4",
+      "frame": {
+        "x": 327,
+        "y": 271,
+        "w": 73,
+        "h": 113
+      },
+      "sourceSize": {
+        "w": 73,
+        "h": 113
+      }
+    },
+    {
+      "filename": "lingshuang_attack_5",
+      "frame": {
+        "x": 400,
+        "y": 288,
+        "w": 80,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 80,
+        "h": 96
+      }
+    },
+    {
+      "filename": "lingshuang_attack_6",
+      "frame": {
+        "x": 480,
+        "y": 272,
+        "w": 80,
+        "h": 85
+      },
+      "sourceSize": {
+        "w": 80,
+        "h": 85
+      }
+    },
+    {
+      "filename": "lingshuang_attack_7",
+      "frame": {
+        "x": 560,
+        "y": 271,
+        "w": 71,
+        "h": 113
+      },
+      "sourceSize": {
+        "w": 71,
+        "h": 113
+      }
+    },
+    {
+      "filename": "lingshuang_hit_0",
+      "frame": {
+        "x": 11,
+        "y": 384,
+        "w": 69,
+        "h": 90
+      },
+      "sourceSize": {
+        "w": 69,
+        "h": 90
+      }
+    },
+    {
+      "filename": "lingshuang_hit_1",
+      "frame": {
+        "x": 80,
+        "y": 387,
+        "w": 80,
+        "h": 86
+      },
+      "sourceSize": {
+        "w": 80,
+        "h": 86
+      }
+    },
+    {
+      "filename": "lingshuang_hit_2",
+      "frame": {
+        "x": 160,
+        "y": 384,
+        "w": 80,
+        "h": 89
+      },
+      "sourceSize": {
+        "w": 80,
+        "h": 89
+      }
+    },
+    {
+      "filename": "lingshuang_hit_3",
+      "frame": {
+        "x": 240,
+        "y": 384,
+        "w": 74,
+        "h": 87
+      },
+      "sourceSize": {
+        "w": 74,
+        "h": 87
+      }
+    },
+    {
+      "filename": "lingshuang_hit_4",
+      "frame": {
+        "x": 329,
+        "y": 384,
+        "w": 71,
+        "h": 89
+      },
+      "sourceSize": {
+        "w": 71,
+        "h": 89
+      }
+    },
+    {
+      "filename": "lingshuang_hit_5",
+      "frame": {
+        "x": 400,
+        "y": 384,
+        "w": 80,
+        "h": 88
+      },
+      "sourceSize": {
+        "w": 80,
+        "h": 88
+      }
+    },
+    {
+      "filename": "lingshuang_hit_6",
+      "frame": {
+        "x": 480,
+        "y": 386,
+        "w": 80,
+        "h": 88
+      },
+      "sourceSize": {
+        "w": 80,
+        "h": 88
+      }
+    },
+    {
+      "filename": "lingshuang_hit_7",
+      "frame": {
+        "x": 560,
+        "y": 384,
+        "w": 68,
+        "h": 90
+      },
+      "sourceSize": {
+        "w": 68,
+        "h": 90
+      }
+    },
+    {
+      "filename": "lingshuang_fall_0",
+      "frame": {
+        "x": 13,
+        "y": 521,
+        "w": 53,
+        "h": 113
+      },
+      "sourceSize": {
+        "w": 53,
+        "h": 113
+      }
+    },
+    {
+      "filename": "lingshuang_fall_1",
+      "frame": {
+        "x": 95,
+        "y": 522,
+        "w": 57,
+        "h": 112
+      },
+      "sourceSize": {
+        "w": 57,
+        "h": 112
+      }
+    },
+    {
+      "filename": "lingshuang_fall_2",
+      "frame": {
+        "x": 166,
+        "y": 518,
+        "w": 70,
+        "h": 116
+      },
+      "sourceSize": {
+        "w": 70,
+        "h": 116
+      }
+    },
+    {
+      "filename": "lingshuang_fall_3",
+      "frame": {
+        "x": 245,
+        "y": 527,
+        "w": 69,
+        "h": 91
+      },
+      "sourceSize": {
+        "w": 69,
+        "h": 91
+      }
+    },
+    {
+      "filename": "lingshuang_fall_4",
+      "frame": {
+        "x": 326,
+        "y": 573,
+        "w": 68,
+        "h": 61
+      },
+      "sourceSize": {
+        "w": 68,
+        "h": 61
+      }
+    },
+    {
+      "filename": "lingshuang_fall_5",
+      "frame": {
+        "x": 417,
+        "y": 565,
+        "w": 46,
+        "h": 70
+      },
+      "sourceSize": {
+        "w": 46,
+        "h": 70
+      }
+    },
+    {
+      "filename": "lingshuang_fall_6",
+      "frame": {
+        "x": 498,
+        "y": 550,
+        "w": 53,
+        "h": 84
+      },
+      "sourceSize": {
+        "w": 53,
+        "h": 84
+      }
+    },
+    {
+      "filename": "lingshuang_fall_7",
+      "frame": {
+        "x": 570,
+        "y": 519,
+        "w": 57,
+        "h": 115
+      },
+      "sourceSize": {
+        "w": 57,
+        "h": 115
+      }
+    }
+  ],
+  "meta": {
+    "image": "lingshuang.png"
+  }
+}

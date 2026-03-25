@@ -11,7 +11,16 @@ export default class BattleScene extends Phaser.Scene {
     super({ key: 'BattleScene' });
   }
 
+  preload() {
+    // 预加载角色图集
+    this.load.atlas('ignis', 'assets/sprites/ignis.png', 'assets/sprites/ignis.json');
+    this.load.atlas('lingshuang', 'assets/sprites/lingshuang.png', 'assets/sprites/lingshuang.json');
+  }
+
   create() {
+    // 创建全局角色动画
+    this.createAnimations();
+
     // 场景背景
     this.createBackground();
 
@@ -52,6 +61,51 @@ export default class BattleScene extends Phaser.Scene {
     console.log('🥊 战斗场景已加载！');
     console.log('🎮 P1 操作: WASD 移动 | J 轻攻 | K 重攻 | L 必杀 | U 防御');
     console.log('🎮 P2 操作: 方向键移动 | 小键盘1 轻攻 | 小键盘2 重攻 | 小键盘3 必杀 | 小键盘0 防御');
+  }
+
+  createAnimations() {
+    // === 辅助方法：便捷生成动画序列 ===
+    const createAnim = (key, atlasKey, frameNames, frameRate = 8, repeat = false) => {
+      this.anims.create({
+        key: key,
+        frames: frameNames.map(f => ({ key: atlasKey, frame: f })),
+        frameRate: frameRate,
+        repeat: repeat ? -1 : 0,
+        yoyo: repeat
+      });
+    };
+
+    // === Ignis (伊格尼斯) 动画 — 4行x6列 ===
+    createAnim('ignis_idle', 'ignis',
+      ['ignis_idle_0','ignis_idle_1','ignis_idle_2','ignis_idle_3','ignis_idle_4','ignis_idle_5'], 8, true);
+    createAnim('ignis_walk', 'ignis',
+      ['ignis_walk_0','ignis_walk_1','ignis_walk_2','ignis_walk_3','ignis_walk_4','ignis_walk_5'], 10, true);
+    createAnim('ignis_attack', 'ignis',
+      ['ignis_attack_0','ignis_attack_1','ignis_attack_2','ignis_attack_3','ignis_attack_4','ignis_attack_5'], 14, false);
+    createAnim('ignis_hit', 'ignis',
+      ['ignis_hit_0','ignis_hit_1','ignis_hit_2'], 10, false);
+    createAnim('ignis_knockdown', 'ignis',
+      ['ignis_hit_3','ignis_hit_4','ignis_hit_5'], 8, false);
+    createAnim('ignis_block', 'ignis',
+      ['ignis_idle_0'], 10, false);
+
+    // === Ling Shuang (凌霜) 动画 — 5行x8列 ===
+    createAnim('lingShuang_idle', 'lingshuang',
+      ['lingshuang_idle_0','lingshuang_idle_1','lingshuang_idle_2','lingshuang_idle_3',
+       'lingshuang_idle_4','lingshuang_idle_5','lingshuang_idle_6','lingshuang_idle_7'], 8, true);
+    createAnim('lingShuang_walk', 'lingshuang',
+      ['lingshuang_walk_0','lingshuang_walk_1','lingshuang_walk_2','lingshuang_walk_3',
+       'lingshuang_walk_4','lingshuang_walk_5','lingshuang_walk_6','lingshuang_walk_7'], 10, true);
+    createAnim('lingShuang_attack', 'lingshuang',
+      ['lingshuang_attack_0','lingshuang_attack_1','lingshuang_attack_2','lingshuang_attack_3',
+       'lingshuang_attack_4','lingshuang_attack_5','lingshuang_attack_6','lingshuang_attack_7'], 14, false);
+    createAnim('lingShuang_hit', 'lingshuang',
+      ['lingshuang_hit_0','lingshuang_hit_1','lingshuang_hit_2','lingshuang_hit_3'], 10, false);
+    createAnim('lingShuang_knockdown', 'lingshuang',
+      ['lingshuang_fall_0','lingshuang_fall_1','lingshuang_fall_2','lingshuang_fall_3',
+       'lingshuang_fall_4','lingshuang_fall_5','lingshuang_fall_6','lingshuang_fall_7'], 8, false);
+    createAnim('lingShuang_block', 'lingshuang',
+      ['lingshuang_idle_0'], 10, false);
   }
 
   // 创建场景背景
