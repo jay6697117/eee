@@ -23,6 +23,9 @@ export default class CharSelectScene extends Phaser.Scene {
     if (!this.textures.exists('lingshuang')) {
       this.load.atlas('lingshuang', 'assets/sprites/lingshuang.png', 'assets/sprites/lingshuang.json');
     }
+    if (!this.textures.exists('neo')) {
+      this.load.atlas('neo', 'assets/sprites/neo.png', 'assets/sprites/neo.json');
+    }
   }
 
   create() {
