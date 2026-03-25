@@ -75,7 +75,7 @@ export default class CharSelectScene extends Phaser.Scene {
     // ==================== 角色卡片 ====================
     const charList = Object.values(CHARACTERS);
     const cardWidth = 240;
-    const cardHeight = 460;
+    const cardHeight = 380;
     const totalWidth = charList.length * cardWidth + (charList.length - 1) * 40;
     const startX = (width - totalWidth) / 2 + cardWidth / 2;
 
@@ -129,7 +129,7 @@ export default class CharSelectScene extends Phaser.Scene {
       }).setOrigin(0.5);
 
       // 属性条
-      const statsY = cy + cardHeight / 2 - 58;
+      const statsY = cy + cardHeight / 2 - 60;
       const stats = [
         { label: 'HP', value: char.stats.hp / 10, color: 0x44ff44 },
         { label: 'SPD', value: char.stats.walkSpeed * 20, color: 0x44aaff },
