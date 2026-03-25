@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { CHARACTERS } from '../config/characters.js';
+import SFXManager from '../systems/SFXManager.js';
 
 /**
  * 角色选择场景
@@ -31,6 +32,10 @@ export default class CharSelectScene extends Phaser.Scene {
     const bg = this.add.graphics();
     bg.fillGradientStyle(0x0a0015, 0x0a0015, 0x150828, 0x150828, 1);
     bg.fillRect(0, 0, width, height);
+
+    // 音效
+    if (!window.__sfx) window.__sfx = new SFXManager();
+    this.sfx = window.__sfx;
 
     // 网格线装饰
     const gridGfx = this.add.graphics();
@@ -163,6 +168,7 @@ export default class CharSelectScene extends Phaser.Scene {
       // 点击选择
       card.on('pointerdown', () => {
         this.selectCharacter(char, card, highlight, elemColors[char.element] || 0xffffff);
+        this.sfx.menuSelect();
       });
 
       this.cards.push({ card, highlight, char, preview });
@@ -178,7 +184,10 @@ export default class CharSelectScene extends Phaser.Scene {
 
     backBtn.on('pointerover', () => backBtn.setColor('#ffffff'));
     backBtn.on('pointerout', () => backBtn.setColor('#887799'));
-    backBtn.on('pointerdown', () => this.scene.start('MainMenuScene'));
+    backBtn.on('pointerdown', () => {
+      this.sfx.menuCancel();
+      this.scene.start('MainMenuScene');
+    });
 
     // 开始按钮（初始隐藏）
     this.startBtn = this.add.rectangle(width / 2, height - 40, 200, 40, 0x44aa44, 0.3)
@@ -201,6 +210,7 @@ export default class CharSelectScene extends Phaser.Scene {
       this.startText.setColor('#88ff88');
     });
     this.startBtn.on('pointerdown', () => {
+      this.sfx.menuConfirm();
       this.launchBattle();
     });
   }

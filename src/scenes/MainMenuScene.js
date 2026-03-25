@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import SFXManager from '../systems/SFXManager.js';
 
 /**
  * 主菜单场景 — 游戏入口
@@ -11,6 +12,11 @@ export default class MainMenuScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.scale;
+
+    // 初始化音效系统
+    if (!window.__sfx) window.__sfx = new SFXManager();
+    this.sfx = window.__sfx;
+    this.input.once('pointerdown', () => this.sfx.init());
 
     // ==================== 背景 ====================
     // 渐变背景
@@ -114,6 +120,7 @@ export default class MainMenuScene extends Phaser.Scene {
         btnBg.setStrokeStyle(2, 0xaa88ff, 0.8);
         btnText.setColor('#ffffff');
         btnText.setScale(1.05);
+        this.sfx.menuSelect();
       });
 
       btnBg.on('pointerout', () => {
@@ -126,6 +133,7 @@ export default class MainMenuScene extends Phaser.Scene {
       // 点击事件
       btnBg.on('pointerdown', () => {
         btnBg.setFillStyle(0xaa77ff, 0.4);
+        this.sfx.menuConfirm();
         this.time.delayedCall(150, () => {
           this.startGame(item.key);
         });

@@ -3,6 +3,7 @@ import { STAGE, BATTLE, JUICE, STATES } from '../config/constants.js';
 import { CHARACTERS, ELEMENT_CHART } from '../config/characters.js';
 import InputManager from '../systems/InputManager.js';
 import AIController from '../systems/AIController.js';
+import SFXManager from '../systems/SFXManager.js';
 import FighterBase from '../fighters/FighterBase.js';
 import BattleHUD from '../ui/BattleHUD.js';
 import TouchControls from '../ui/TouchControls.js';
@@ -54,6 +55,15 @@ export default class BattleScene extends Phaser.Scene {
     // 创建 HUD
     this.hud = new BattleHUD(this);
     this.hud.setNames(p1Data, p2Data);
+
+    // 初始化音效系统（全局单例）
+    if (!window.__sfx) {
+      window.__sfx = new SFXManager();
+    }
+    this.sfx = window.__sfx;
+    // 在首次用户交互时初始化 AudioContext
+    this.input.once('pointerdown', () => this.sfx.init());
+    this.input.keyboard.once('keydown', () => this.sfx.init());
 
     // 对战状态
     this.roundNumber = 1;
@@ -209,8 +219,10 @@ export default class BattleScene extends Phaser.Scene {
 
     // 回合开始演出
     this.hud.showAnnounce(`ROUND ${this.roundNumber}`, 1000);
+    this.sfx.roundStart();
     this.time.delayedCall(1500, () => {
       this.hud.showAnnounce('FIGHT!', 500);
+      this.sfx.fight();
       this.time.delayedCall(700, () => {
         this.battleState = 'fighting';
       });
@@ -231,6 +243,7 @@ export default class BattleScene extends Phaser.Scene {
 
     this.hud.updateRounds(this.p1Wins, this.p2Wins);
     this.hud.showAnnounce('KO!', 1500);
+    this.sfx.ko();
 
     this.time.delayedCall(2500, () => {
       // 检查是否有人赢得比赛
@@ -250,6 +263,7 @@ export default class BattleScene extends Phaser.Scene {
     this.battleState = 'matchEnd';
     const winnerName = winner === 1 ? this.p1Data.name : this.p2Data.name;
     this.hud.showAnnounce(`${winnerName} WINS!`, 3000);
+    this.sfx.victory();
 
     // 4 秒后返回主菜单
     this.time.delayedCall(4000, () => {
@@ -416,6 +430,11 @@ export default class BattleScene extends Phaser.Scene {
       const hitLevel = isSpecial ? 'special' : isHeavy ? 'heavy' : 'light';
       this.createHitEffect(defender.x, defender.y - 40, attacker.data.color, hitLevel);
 
+      // 音效
+      if (isSpecial) this.sfx.hitSpecial();
+      else if (isHeavy) this.sfx.hitHeavy();
+      else this.sfx.hitLight();
+
       // 伤害数字弹出
       const dmg = hitData.damage || 10;
       this.showDamageNumber(defender.x, defender.y - 60, dmg, attacker.comboCount, attacker.data.color);
@@ -427,6 +446,7 @@ export default class BattleScene extends Phaser.Scene {
       // 防御特效
       this.shakeIntensity = 2;
       this.createBlockEffect(defender.x + defender.facing * 20, defender.y - 40);
+      this.sfx.block();
     }
   }
 
