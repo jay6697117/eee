@@ -56,10 +56,12 @@ export default class FighterBase {
     const spriteScale = this.data.spriteScale || 1.4;
 
     // 创建主精灵
-    this.sprite = this.scene.add.sprite(this.x, this.y, this.data.id);
+    const offsetY = this.data.spriteOffsetY || 0;
+    this.sprite = this.scene.add.sprite(this.x, this.y + offsetY, this.data.id);
     this.sprite.setOrigin(0.5, 1); // 底部中心对齐
     this.sprite.setScale(spriteScale);
     this.sprite.setDepth(5); // 确保角色在背景之上
+    this.spriteOffsetY = offsetY;
 
     // 如果是 P2，初始朝向左边我们需要水平翻转
     if (this.facing === -1) {
@@ -175,7 +177,7 @@ export default class FighterBase {
     this.updatePhysics();
 
     // 更新精灵位置和朝向
-    this.sprite.setPosition(this.x, this.y);
+    this.sprite.setPosition(this.x, this.y + (this.spriteOffsetY || 0));
     this.sprite.setFlipX(this.facing === -1);
     this.playStateAnimation();
 

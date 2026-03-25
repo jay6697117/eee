@@ -131,7 +131,8 @@ export const CHARACTERS = {
     element: 'thunder',
     color: 0xffee00,
     accentColor: 0xffff88,
-    spriteScale: 1.2,
+    spriteScale: 1.75,      // 精灵缩放（帧高 106px × 1.8 ≈ 显示 191px，与其他角色一致）
+    spriteOffsetY: -5,    // Neo 帧底部有空白，向上微调对齐地面
 
     stats: {
       hp: 880,
