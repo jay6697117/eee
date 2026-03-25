@@ -1,0 +1,16 @@
+{
+  "name": "all-girls-fighting",
+  "private": true,
+  "version": "0.1.0",
+  "description": "全女格斗 · 异时空格斗女神 — 一款全女性阵容的 2D 格斗游戏",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "phaser": "^3.90.0",
+    "vite": "^8.0.2"
+  }
+}
